@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gomechanic/main.dart';
+import 'package:gomechanic/services/AuthService.dart';
+import 'package:location/location.dart';
+
 
 class SignupScreen extends StatefulWidget {
   @override
@@ -10,10 +15,26 @@ class _SignupScreenState extends State<SignupScreen> {
   bool isObscure = true , isConfirmObscure = true;
   bool isLoading = false , isMechanic = false;
 
+
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+
+  var type = "" , latt = "" , long = "" , state = "";
+
+  Location location = new Location();
+  LocationData _locationData;
+
+  bool _serviceEnabled;
+  PermissionStatus _permissionGranted;
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       body: Stack(
         children: [
           Container(
@@ -76,6 +97,8 @@ class _SignupScreenState extends State<SignupScreen> {
               border: Border.all(color: Colors.white)
           ),
           child: TextField(
+            controller: phoneController,
+            keyboardType: TextInputType.number,
             decoration: InputDecoration(
               border: InputBorder.none,
               hintText: "Phone",
@@ -91,6 +114,7 @@ class _SignupScreenState extends State<SignupScreen> {
               border: Border.all(color: Colors.white)
           ),
           child: TextField(
+            controller: emailController,
             decoration: InputDecoration(
               border: InputBorder.none,
               hintText: "Email",
@@ -106,6 +130,7 @@ class _SignupScreenState extends State<SignupScreen> {
               border: Border.all(color: Colors.white)
           ),
           child: TextField(
+            controller: usernameController,
             decoration: InputDecoration(
               border: InputBorder.none,
               hintText: "Username",
@@ -121,6 +146,7 @@ class _SignupScreenState extends State<SignupScreen> {
               border: Border.all(color: Colors.white)
           ),
           child: TextField(
+            controller: passwordController,
             obscureText: isObscure,
             decoration: InputDecoration(
                 suffixIcon: GestureDetector(
@@ -145,6 +171,7 @@ class _SignupScreenState extends State<SignupScreen> {
               border: Border.all(color: Colors.white)
           ),
           child: TextField(
+            controller: confirmPasswordController,
             obscureText: isConfirmObscure,
             decoration: InputDecoration(
               suffixIcon: GestureDetector(
@@ -225,9 +252,95 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   doSignup() async{
-    isLoading = true;
-    setState(() {
-    });
+
+
+    if(passwordController.text == confirmPasswordController.text && passwordController.text!="")
+    {
+      isLoading = true;
+      setState(() {
+
+      });
+
+
+      await getLatLng();
+
+      String username = usernameController.text;
+      String email = emailController.text;
+      String phone = phoneController.text;
+      String pass = passwordController.text;
+
+
+      if (pass != "" && username != "" && phone != "" && type != "" &&
+          email != "" && latt != "" && long != "") {
+        var res = await AuthService.register(
+            username,
+            email,
+            latt,
+            long,
+            phone,
+            pass,
+            state,
+            type
+        );
+
+        if (res != null) {
+          Fluttertoast.showToast(msg: "Successfully signed up !",
+              textColor: Colors.white,
+              backgroundColor: Colors.black);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => MyHomePage()),
+          );
+        }
+
+
+        isLoading = false;
+        setState(() {
+
+        });
+      }
+      else {
+        Fluttertoast.showToast(msg: 'Empty Fields!',
+            textColor: Colors.white,
+            backgroundColor: Colors.black);
+      }
+    }
+    else{
+      Fluttertoast.showToast(msg: "Password different !",
+          textColor: Colors.white,
+          backgroundColor: Colors.black);
+    }
+
+  }
+
+  getLatLng() async{
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    _locationData = await location.getLocation();
+
+    latt = _locationData.latitude.toString();
+    long = _locationData.longitude.toString();
+
+    if(isMechanic)
+      type = "2";
+    else
+      type = "1";
+
   }
 
 }

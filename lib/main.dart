@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gomechanic/screens/main_screen.dart';
 import 'package:gomechanic/screens/signup_screen.dart';
+import 'package:gomechanic/services/AuthService.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,6 +34,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   bool isObscure = true;
   bool isMechanic = false;
+  bool isLoading = false;
+
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,16 +50,25 @@ class _MyHomePageState extends State<MyHomePage> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Center(
-          child:Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset("images/logo.png" , scale: 25,),
-              SizedBox(height: 30,),
-              loginPanel()
-            ],
-          ),
+        child: Stack(
+          children: [
+            Center(
+              child:Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                      width: 250,
+                      child: Image.asset("images/logo.png",  scale: 1,)),
+                  SizedBox(height: 0,),
+                  loginPanel()
+                ],
+              ),
+            ),
+            (isLoading) ? Center(
+              child: CircularProgressIndicator(),
+            ) : Container()
+          ],
         ) /* add child content here */,
       ),
     );
@@ -86,6 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
             border: Border.all(color: Colors.white)
           ),
           child: TextField(
+            controller: phoneController,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
               border: InputBorder.none,
@@ -102,6 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
               border: Border.all(color: Colors.white)
           ),
           child: TextField(
+            controller: passwordController,
             obscureText: isObscure,
             decoration: InputDecoration(
               suffixIcon: GestureDetector(
@@ -122,46 +141,53 @@ class _MyHomePageState extends State<MyHomePage> {
           margin: const EdgeInsets.all(10),
           child: Text('Forgot Password?' , style: TextStyle( color: Color.fromRGBO(255, 25, 10, 1)),),
         ),
-        Container(
-          margin: EdgeInsets.only(left: 0 , top: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              GestureDetector(
-                onTap: (){
-                  isMechanic = !isMechanic;
+//        Container(
+//          margin: EdgeInsets.only(left: 0 , top: 10),
+//          child: Row(
+//            mainAxisAlignment: MainAxisAlignment.start,
+//            children: [
+//              GestureDetector(
+//                onTap: (){
+//                  isMechanic = !isMechanic;
+//
+//                  setState(() {
+//                  });
+//
+//                },
+//                child: Container(
+//                  margin: EdgeInsets.only(left: 20),
+//                  height: 25,
+//                  width: 25,
+//                  child: Padding(
+//                    padding: const EdgeInsets.only(left : 0 , right: 2),
+//                    child: (isMechanic) ? Icon(Icons.done , color: Colors.white,) : Container(),
+//                  ),
+//                  decoration: BoxDecoration(
+//                      border: Border.all(color: Colors.white)
+//                  ),
+//                ),
+//              ),
+//              SizedBox(width: 10,),
+//              Text('I am a mechanic')
+//            ],
+//          ),
+//        ),
+        GestureDetector(
+          onTap: (){
 
-                  setState(() {
-                  });
+            login();
 
-                },
-                child: Container(
-                  margin: EdgeInsets.only(left: 20),
-                  height: 25,
-                  width: 25,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left : 0 , right: 2),
-                    child: (isMechanic) ? Icon(Icons.done , color: Colors.white,) : Container(),
-                  ),
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white)
-                  ),
-                ),
-              ),
-              SizedBox(width: 10,),
-              Text('I am a mechanic')
-            ],
+          },
+          child: Container(
+            alignment: Alignment.center,
+            margin: const EdgeInsets.only(left: 30 , right: 30 , top: 20),
+            height: 50,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+                color: Colors.white
+            ),
+            child: Text('Sign in' , style: TextStyle(color : Colors.black , fontSize: 20 ,fontWeight: FontWeight.bold),),
           ),
-        ),
-        Container(
-          alignment: Alignment.center,
-          margin: const EdgeInsets.only(left: 30 , right: 30 , top: 20),
-          height: 50,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
-              color: Colors.white
-          ),
-          child: Text('Sign in' , style: TextStyle(color : Colors.black , fontSize: 20 ,fontWeight: FontWeight.bold),),
         ),
         SizedBox(height: 20,),
         Row(
@@ -181,5 +207,49 @@ class _MyHomePageState extends State<MyHomePage> {
         )
       ],
     );
+  }
+
+  login() async {
+
+
+
+    String phone = phoneController.text;
+    String password = passwordController.text;
+    if(phone!="" && password!="")
+    {
+      isLoading = true;
+      setState(() {
+
+      });
+      bool res = await AuthService.login(phone, password);
+      if(res == true)
+      {
+        isLoading = false;
+        setState(() {
+        });
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MainScreen()),
+        );
+
+      }
+      else
+      {
+        isLoading = false;
+        setState(() {
+        });
+
+      }
+    }
+    else
+    {
+      Fluttertoast.showToast(msg: "Empty Fields !" , textColor: Colors.white , backgroundColor: Colors.black);
+
+      isLoading = false;
+      setState(() {
+      });
+    }
+
+
   }
 }
