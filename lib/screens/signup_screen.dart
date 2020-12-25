@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gomechanic/main.dart';
 import 'package:gomechanic/services/AuthService.dart';
+import 'package:gomechanic/utils/LocationHandler.dart';
 import 'package:location/location.dart';
 
 
@@ -285,8 +286,8 @@ class _SignupScreenState extends State<SignupScreen> {
 
         if (res != null) {
           Fluttertoast.showToast(msg: "Successfully signed up !",
-              textColor: Colors.white,
-              backgroundColor: Colors.black);
+              textColor: Colors.black,
+              backgroundColor: Colors.white);
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => MyHomePage()),
@@ -301,40 +302,25 @@ class _SignupScreenState extends State<SignupScreen> {
       }
       else {
         Fluttertoast.showToast(msg: 'Empty Fields!',
-            textColor: Colors.white,
-            backgroundColor: Colors.black);
+            textColor: Colors.black,
+            backgroundColor: Colors.white);
       }
     }
     else{
       Fluttertoast.showToast(msg: "Password different !",
-          textColor: Colors.white,
-          backgroundColor: Colors.black);
+          textColor: Colors.black,
+          backgroundColor: Colors.white);
     }
 
   }
 
   getLatLng() async{
 
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
+    LocationData data = await LocationHandler.getLocation();
 
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
+    latt = data.latitude.toString();
+    long = data.longitude.toString();
 
-    _locationData = await location.getLocation();
-
-    latt = _locationData.latitude.toString();
-    long = _locationData.longitude.toString();
 
     if(isMechanic)
       type = "2";

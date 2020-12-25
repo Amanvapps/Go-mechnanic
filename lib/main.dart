@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gomechanic/screens/customer_home_screen.dart';
+import 'package:gomechanic/screens/forgot_pass_screen.dart';
 import 'package:gomechanic/screens/main_screen.dart';
 import 'package:gomechanic/screens/signup_screen.dart';
 import 'package:gomechanic/services/AuthService.dart';
@@ -41,6 +44,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent
+    ));
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
@@ -137,41 +145,18 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ),
-        Container(
-          margin: const EdgeInsets.all(10),
-          child: Text('Forgot Password?' , style: TextStyle( color: Color.fromRGBO(255, 25, 10, 1)),),
+        GestureDetector(
+          onTap: (){
+            Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => ForgotPasswordScreen()),
+        );
+          },
+          child: Container(
+            margin: const EdgeInsets.all(10),
+            child: Text('Forgot Password?' , style: TextStyle( color: Color.fromRGBO(255, 25, 10, 1)),),
+          ),
         ),
-//        Container(
-//          margin: EdgeInsets.only(left: 0 , top: 10),
-//          child: Row(
-//            mainAxisAlignment: MainAxisAlignment.start,
-//            children: [
-//              GestureDetector(
-//                onTap: (){
-//                  isMechanic = !isMechanic;
-//
-//                  setState(() {
-//                  });
-//
-//                },
-//                child: Container(
-//                  margin: EdgeInsets.only(left: 20),
-//                  height: 25,
-//                  width: 25,
-//                  child: Padding(
-//                    padding: const EdgeInsets.only(left : 0 , right: 2),
-//                    child: (isMechanic) ? Icon(Icons.done , color: Colors.white,) : Container(),
-//                  ),
-//                  decoration: BoxDecoration(
-//                      border: Border.all(color: Colors.white)
-//                  ),
-//                ),
-//              ),
-//              SizedBox(width: 10,),
-//              Text('I am a mechanic')
-//            ],
-//          ),
-//        ),
         GestureDetector(
           onTap: (){
 
@@ -229,7 +214,7 @@ class _MyHomePageState extends State<MyHomePage> {
         });
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => MainScreen()),
+          MaterialPageRoute(builder: (context) => CustomerHomeScreen()),
         );
 
       }
@@ -243,7 +228,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     else
     {
-      Fluttertoast.showToast(msg: "Empty Fields !" , textColor: Colors.white , backgroundColor: Colors.black);
+      Fluttertoast.showToast(msg: "Empty Fields !" ,  textColor: Colors.black,
+          backgroundColor: Colors.white);
 
       isLoading = false;
       setState(() {

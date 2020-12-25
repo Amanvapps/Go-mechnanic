@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:gomechanic/utils/ApiConstants.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
@@ -21,7 +22,7 @@ class RequestHandler{
     if (params != null) {
       url += "?" + encodeQuery(params);
     }
-    var response = await http.get( Uri.parse(ApiConstants.URL + url),
+    var response = await http.get(Uri.parse(ApiConstants.URL + url),
         headers: {
           "Content-Type": "application/json",
         });
@@ -43,12 +44,14 @@ class RequestHandler{
   static responseHandler(response) {
     if (response.statusCode == 200) return json.decode(response.body);
     else {
-      Fluttertoast.showToast(msg: "Oops! Something went wrong.");
+      Fluttertoast.showToast(msg: "Oops! Something went wrong." ,  textColor: Colors.black,
+          backgroundColor: Colors.white);
       return {};
     }
   }
 
   static encodeQuery(params) {
+    print(params);
     List<String> query = [];
     params.forEach((key, value) {
       query.add(key.toString() + "=" + value.toString());

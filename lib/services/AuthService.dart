@@ -25,7 +25,8 @@ class AuthService{
 
       return true;
     }
-    Fluttertoast.showToast(msg: "Invalid Credentials !" , textColor: Colors.white , backgroundColor: Colors.black);
+    Fluttertoast.showToast(msg: "Invalid Credentials !" ,  textColor: Colors.black,
+        backgroundColor: Colors.white);
     return false;
 
   }
@@ -57,6 +58,20 @@ class AuthService{
   var response = await RequestHandler.POSTQUERY(ApiConstants.REGISTRATION, form);
   return response["data"];
 }
+
+  static Future reset(String email) async {
+    var form;
+    form = {
+      'email' : email,
+      'token' : TOKEN
+};
+
+    var response = await RequestHandler.POSTQUERY(ApiConstants.RESET, form);
+    if(response["status"] == "1")
+      return true;
+    else
+      return false;
+  }
 
 
 
