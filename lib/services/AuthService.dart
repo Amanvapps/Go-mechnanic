@@ -10,7 +10,7 @@ class AuthService{
 
   static const String TOKEN = "9306488494";
 
-  static Future<bool> login(phone , password) async{
+  static Future login(phone , password) async{
 
     var response = await RequestHandler.POSTQUERY(ApiConstants.LOGIN, {
       'mobb': phone,
@@ -23,11 +23,18 @@ class AuthService{
       print(response["data"][0]);
            await saveToken(jsonDecode(json.encode(response["data"][0])));
 
-      return true;
+           var obj = {
+             "result" : true,
+             "type" : response["data"][0]["types"]
+           };
+      return obj;
     }
     Fluttertoast.showToast(msg: "Invalid Credentials !" ,  textColor: Colors.black,
         backgroundColor: Colors.white);
-    return false;
+    return {
+      "result" : false,
+      "type" : ""
+    };
 
   }
 

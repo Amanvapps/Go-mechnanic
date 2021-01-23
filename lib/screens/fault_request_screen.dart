@@ -6,6 +6,7 @@ import 'package:gomechanic/model/FaultModel.dart';
 import 'package:gomechanic/screens/customer_home_screen.dart';
 import 'package:gomechanic/screens/package_screen.dart';
 import 'package:gomechanic/screens/payment_screen_request_eng.dart';
+import 'package:gomechanic/screens/service_history_screen.dart';
 import 'package:gomechanic/services/FaultService.dart';
 import 'package:gomechanic/utils/ColorConstants.dart';
 import 'package:gomechanic/utils/LocationHandler.dart';
@@ -129,16 +130,11 @@ class _FaultRequestScreenState extends State<FaultRequestScreen> {
               leading: Icon(Icons.history),
               title: Text('Service History' , style: TextStyle(color: Colors.black)),
               onTap: () {
-                // Update the state of the app.
-                // ...
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.track_changes),
-              title: Text('Track Mechanic' , style: TextStyle(color: Colors.black)),
-              onTap: () {
-                // Update the state of the app.
-                // ...
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ServiceHistoryScreen()),
+                );
               },
             ),
             ListTile(

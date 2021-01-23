@@ -14,6 +14,10 @@
 	<string>gomechanic</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>When in use permissions</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>always permissions</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>

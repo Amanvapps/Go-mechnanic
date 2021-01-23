@@ -17,6 +17,12 @@ class ApiConstants{
   static const String PAY_PACKAGE = "pay.php";
   static const String SAVE_PACKAGE = "saveRegForm.php";
   static const String COMPLAIN_HISTORY = "complain_history.php";
+  static const String CUSTOMER_MAP = "mech_live_loc.php";
+
+  static const String COMPLETED_TASKS = "completed_task.php";
+  static const String NEW_TASKS = "m_newTask.php";
+  static const String COMPLETE_TASK_MESSAGE = "complete_task_msg.php";
+
 
 
 }

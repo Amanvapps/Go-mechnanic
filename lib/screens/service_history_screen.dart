@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:gomechanic/model/complain_history_model.dart';
+import 'package:gomechanic/screens/customer_map_screen.dart';
 import 'package:gomechanic/screens/package_screen.dart';
 import 'package:gomechanic/services/FaultService.dart';
 import 'package:gomechanic/utils/ColorConstants.dart';
@@ -89,8 +90,11 @@ class _ServiceHistoryScreenState extends State<ServiceHistoryScreen> {
               leading: Icon(Icons.history),
               title: Text('Service History' , style: TextStyle(color: Colors.black)),
               onTap: () {
-                // Update the state of the app.
-                // ...
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ServiceHistoryScreen()),
+                );
               },
             ),
             ListTile(
@@ -106,14 +110,7 @@ class _ServiceHistoryScreenState extends State<ServiceHistoryScreen> {
 
               },
             ),
-            ListTile(
-              leading: Icon(Icons.track_changes),
-              title: Text('Track Mechanic' , style: TextStyle(color: Colors.black)),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
-            ),
+
             ListTile(
               leading: Icon(Icons.policy),
               title: Text('Privacy Policy' , style: TextStyle(color: Colors.black)),
@@ -148,11 +145,11 @@ class _ServiceHistoryScreenState extends State<ServiceHistoryScreen> {
             Container(
               color: ColorConstants.APP_THEME_COLOR,
             ),
-            ListView.builder(
+            (list!=null) ? ListView.builder(
                 itemCount: list.length,
                 itemBuilder: (BuildContext ctx , int index){
                  return tileItem(list[index]);
-            })
+            }) : Container()
           ],
         ),
       ),
@@ -204,9 +201,32 @@ class _ServiceHistoryScreenState extends State<ServiceHistoryScreen> {
         ),
         Container(
           child: Center(
-          child: Text('Mechanic : ${model.mechanic}' , style: TextStyle(fontSize: 17),),),
+          child: Column(
+            children: [
+              (model.mechanic != "NA") ?
+              Text('Mechanic : ${model.mechanic}' , style: TextStyle(fontSize: 17),)
+                  : Text('Mechanic Not Assigned' , style: TextStyle(fontWeight : FontWeight.normal , color : Colors.black , fontSize: 17),),
+              (model.mechanic != "NA") ? GestureDetector(
+                onTap: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CustomerMapScreen(model.mechanicId)),
+                  );
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.all(15),
+                  height: 50,
+                  width: MediaQuery.of(context).size.width/1.5,
+                  color: ColorConstants.APP_THEME_COLOR,
+                  child: Text('TRACK MECHANIC' , style: TextStyle(fontSize: 17 , fontWeight: FontWeight.bold),),
+                ),
+              ) : Container()
+            ],
+          )
+          ),
+          padding: EdgeInsets.only(top: 10 , bottom: 10),
           margin: EdgeInsets.only(left: 20 , right: 20 , bottom: 20),
-          height: 40,
           decoration: BoxDecoration(
              color: Color.fromRGBO(92, 181, 179, 1),
              borderRadius : BorderRadius.only(bottomLeft: Radius.circular(10) , bottomRight: Radius.circular(10))

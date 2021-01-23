@@ -139,14 +139,6 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.track_changes),
-              title: Text('Track Mechanic' , style: TextStyle(color: Colors.black)),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
-            ),
-            ListTile(
               leading: Icon(Icons.policy),
               title: Text('Privacy Policy' , style: TextStyle(color: Colors.black)),
               onTap: () {

@@ -7,6 +7,7 @@ class CompliantHistoryModel{
   var time;
   var location;
   var mechanic;
+  var mechanicId;
 
   CompliantHistoryModel(obj){
     fault_type = obj["fault_prob"];
@@ -15,6 +16,7 @@ class CompliantHistoryModel{
     time = obj["c_time"];
     location = obj["c_breakdown"];
     mechanic = obj["c_engg"];
+    mechanicId = obj["c_id"];
   }
 
   static fromJSONList(list) {

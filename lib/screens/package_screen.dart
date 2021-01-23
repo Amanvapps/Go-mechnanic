@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gomechanic/screens/buy_package_screen.dart';
 import 'package:gomechanic/screens/customer_home_screen.dart';
 import 'package:gomechanic/screens/fault_request_screen.dart';
+import 'package:gomechanic/screens/service_history_screen.dart';
 import 'package:gomechanic/utils/ColorConstants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -61,8 +62,11 @@ class _PackageScreenState extends State<PackageScreen> {
                 leading: Icon(Icons.history),
                 title: Text('Service History' , style: TextStyle(color: Colors.black)),
                 onTap: () {
-                  // Update the state of the app.
-                  // ...
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ServiceHistoryScreen()),
+                  );
                 },
               ),
               ListTile(
@@ -74,14 +78,6 @@ class _PackageScreenState extends State<PackageScreen> {
                     context,
                     MaterialPageRoute(builder: (context) => FaultRequestScreen()),
                   );
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.track_changes),
-                title: Text('Track Mechanic' , style: TextStyle(color: Colors.black)),
-                onTap: () {
-                  // Update the state of the app.
-                  // ...
                 },
               ),
               ListTile(

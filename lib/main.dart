@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gomechanic/screens/MechanicHomeScreen.dart';
 import 'package:gomechanic/screens/customer_home_screen.dart';
 import 'package:gomechanic/screens/forgot_pass_screen.dart';
 import 'package:gomechanic/screens/main_screen.dart';
@@ -206,16 +207,27 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
 
       });
-      bool res = await AuthService.login(phone, password);
-      if(res == true)
+      var res = await AuthService.login(phone, password);
+      if(res["result"] == true)
       {
         isLoading = false;
         setState(() {
         });
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => CustomerHomeScreen()),
-        );
+        print("es-----" + res["type"]);
+
+        if(res["type"] == "1"){
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => CustomerHomeScreen()),
+          );
+        }else{
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => MechanicHomeScreen()),
+          );
+        }
+
+
 
       }
       else
